@@ -25,7 +25,7 @@ export const hackathons = pgTable(
   },
   (hackathons) => {
     return {
-      userIdIndex: index("name_idx").on(hackathons.uuid),
+      hackathonIdIndex: index("hackathon_idx").on(hackathons.uuid),
     };
   }
 );

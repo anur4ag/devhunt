@@ -5,6 +5,7 @@ import { queryOptions } from "@tanstack/react-query";
 const client = hc<ApiRoutes>("/");
 export const api = client.api;
 
+/*--------------- Query Options ------------- */
 export const hackathonQueryOptions = queryOptions({
   queryKey: ["hackathons"],
   queryFn: fetchHackathons,
@@ -17,6 +18,7 @@ export const userQueryOptions = queryOptions({
   staleTime: Infinity,
 });
 
+/*--------------- Query Functions ------------- */
 async function fetchHackathons() {
   const res = await api.hackathons.$get();
   if (!res.ok) {

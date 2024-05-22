@@ -1,7 +1,4 @@
-import {
-  Outlet,
-  createFileRoute,
-} from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { userQueryOptions } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
@@ -16,13 +13,12 @@ export const Route = createFileRoute("/_authenticated")({
       console.error(e);
       return { user: null };
     }
-    // return { user: null };
   },
   component: Component,
 });
 
 function Component() {
-  const {user} = Route.useRouteContext();
+  const { user } = Route.useRouteContext();
   if (!user) return <Login />;
   return <Outlet />;
 }
