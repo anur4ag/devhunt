@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const Hackathons = () => {
   const [hackathons, setHackathons] = useState<
@@ -16,18 +17,16 @@ const Hackathons = () => {
       team_max: number;
     }[]
   >([]);
-  useEffect(() => {
-    async function fetchHackathons() {
-      const data = await api.hackathons.$get();
-      const res = await data.json();
-      setHackathons(res.hackathons);
-    }
-    fetchHackathons();
-  }, []);
+  const { isPending, error, data } = useQuery({
+    queryKey: ["hackathons"],
+    queryFn: fetchHackathons,
+  });
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      {hackathons.map((hackathon) => (
+      {data.map((hackathon) => (
         <div key={hackathon.uuid}>
           <h3>{hackathon.name}</h3>
           <p>{hackathon.desc}</p>
@@ -38,3 +37,12 @@ const Hackathons = () => {
 };
 
 export default Hackathons;
+
+async function fetchHackathons() {
+  const res = await api.hackathons.$get();
+  if (!res.ok) {
+    throw new Error("Failed to fetch hackathons");
+  }
+  const data = await res.json();
+  return data.hackathons;
+}
