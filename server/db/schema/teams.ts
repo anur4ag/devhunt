@@ -17,7 +17,7 @@ export const teams = pgTable(
     hackathon_id: uuid("hackathon_id")
       .notNull()
       .references(() => hackathons.uuid, { onDelete: "cascade" }),
-    created_by: uuid("created_by")
+    created_by: text("created_by")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     created_at: timestamp("timestamp").defaultNow(),
