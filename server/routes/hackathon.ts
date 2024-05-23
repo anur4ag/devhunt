@@ -95,7 +95,7 @@ export const hackathonRoute = new Hono()
   )
   .post(
     "/newteam",
-
+    getUser,
     zValidator(
       "json",
       z.object({
@@ -109,7 +109,7 @@ export const hackathonRoute = new Hono()
       }
     ),
     async (c) => {
-      // const user = c.var.user;
+      const user = c.var.user;
       const { team_name, hackathon_id } = c.req.valid("json");
       const uuid = crypto.randomUUID();
       const newTeam = await db
@@ -117,7 +117,7 @@ export const hackathonRoute = new Hono()
         .values({
           name: team_name,
           hackathon_id,
-          created_by: "kp_0f18f528cea64e02b780a5c8370cca15",
+          created_by: user.id,
           id: uuid,
         })
         .returning();
@@ -127,10 +127,7 @@ export const hackathonRoute = new Hono()
         .set({ team_id })
         .where(
           and(
-            eq(
-              user_hackathon_table.user_id,
-              "kp_0f18f528cea64e02b780a5c8370cca15"
-            ),
+            eq(user_hackathon_table.user_id, user.id),
             eq(user_hackathon_table.hackathon_id, hackathon_id)
           )
         );
