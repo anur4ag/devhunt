@@ -3,11 +3,11 @@ import { getUser } from "../kinde";
 import { db } from "../db";
 import { users as usersTable } from "../db/schema/users";
 import { eq } from "drizzle-orm";
+import { user_hackathons as userHackathonTable } from "../db/schema/user_hackathon";
+import { hackathons as hackathonsTable } from "../db/schema/hackathons";
 
-export const userHackathonRoute = new Hono().get(
-  "/profile",
-  getUser,
-  async (c) => {
+export const userHackathonRoute = new Hono()
+  .get("/profile", getUser, async (c) => {
     const user = c.var.user;
     const userDetails = await db
       .select()
@@ -19,5 +19,17 @@ export const userHackathonRoute = new Hono().get(
       });
     }
     return c.json(userDetails?.[0]);
-  }
-);
+  })
+  .get("/userhackathons", getUser, async (c) => {
+    const user = c.var.user;
+    const user_registered_hackathons = await db
+      .select()
+      .from(userHackathonTable)
+      .innerJoin(
+        hackathonsTable,
+        eq(userHackathonTable.hackathon_id, hackathonsTable.uuid)
+      )
+      .where(eq(userHackathonTable.user_id, user.id));
+    console.log(user_registered_hackathons);
+    return c.json(user_registered_hackathons);
+  });

@@ -22,6 +22,7 @@ export const user_hackathons = pgTable(
       onDelete: "set null",
     }),
     registered_at: timestamp("registered_at").defaultNow(),
+    participationStatus: text("participation_status").default("registered"),
   },
   (user_hackathons) => {
     return {

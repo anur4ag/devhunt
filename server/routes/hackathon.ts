@@ -3,7 +3,10 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { hackathons as hackathonTable } from "../db/schema/hackathons";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { getUser } from "../kinde";
+import { user_hackathons as user_hackathon_table } from "../db/schema/user_hackathon";
+import { teams as teamsTable } from "../db/schema/teams";
 
 const HackathonSchema = z.object({
   uuid: z.string().uuid(),
@@ -66,5 +69,71 @@ export const hackathonRoute = new Hono()
         .returning();
 
       return c.json({ message: "Hackathon created", postedHackathon }, 201);
+    }
+  )
+  .post(
+    "/register",
+    getUser,
+    zValidator(
+      "json",
+      z.object({ hackathon_id: z.string().uuid() }),
+      (result, c) => {
+        if (!result.success) {
+          return c.json({ message: "Invalid hackathon id" }, 400);
+        }
+      }
+    ),
+    async (c) => {
+      const user = c.var.user;
+      const hackathon_id = c.req.valid("json").hackathon_id;
+      const user_hackathon = await db.insert(user_hackathon_table).values({
+        user_id: user.id,
+        hackathon_id,
+      });
+      return c.json({ message: "Registered for hackathon" }, 201);
+    }
+  )
+  .post(
+    "/newteam",
+
+    zValidator(
+      "json",
+      z.object({
+        team_name: z.string().max(256),
+        hackathon_id: z.string().uuid(),
+      }),
+      (result, c) => {
+        if (!result.success) {
+          return c.json({ message: "Invalid team name" }, 400);
+        }
+      }
+    ),
+    async (c) => {
+      // const user = c.var.user;
+      const { team_name, hackathon_id } = c.req.valid("json");
+      const uuid = crypto.randomUUID();
+      const newTeam = await db
+        .insert(teamsTable)
+        .values({
+          name: team_name,
+          hackathon_id,
+          created_by: "kp_0f18f528cea64e02b780a5c8370cca15",
+          id: uuid,
+        })
+        .returning();
+      const team_id = newTeam[0].id;
+      const updateUserHackathon = await db
+        .update(user_hackathon_table)
+        .set({ team_id })
+        .where(
+          and(
+            eq(
+              user_hackathon_table.user_id,
+              "kp_0f18f528cea64e02b780a5c8370cca15"
+            ),
+            eq(user_hackathon_table.hackathon_id, hackathon_id)
+          )
+        );
+      return c.json({ message: "Team created", newTeam }, 201);
     }
   );

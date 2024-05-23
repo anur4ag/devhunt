@@ -13,7 +13,6 @@ export const teams = pgTable(
   {
     id: uuid("uuid").primaryKey(),
     name: text("name").notNull(),
-    tagline: varchar("tagline", { length: 255 }).notNull(),
     hackathon_id: uuid("hackathon_id")
       .notNull()
       .references(() => hackathons.uuid, { onDelete: "cascade" }),
