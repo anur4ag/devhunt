@@ -3,10 +3,11 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { hackathons as hackathonTable } from "../db/schema/hackathons";
 import { db } from "../db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull, ne } from "drizzle-orm";
 import { getUser } from "../kinde";
 import { user_hackathons as user_hackathon_table } from "../db/schema/user_hackathon";
 import { teams as teamsTable } from "../db/schema/teams";
+import { users as usersTable } from "../db/schema/users";
 
 const HackathonSchema = z.object({
   uuid: z.string().uuid(),
@@ -30,7 +31,7 @@ export const hackathonRoute = new Hono()
     return c.json({ hackathons }, 200);
   })
   .get(
-    "/:uuid",
+    "/event/:uuid",
     zValidator("param", uuidSchema, (result, c) => {
       if (!result.success) {
         return c.json({ message: "Invalid request param" }, 400);
@@ -132,5 +133,41 @@ export const hackathonRoute = new Hono()
           )
         );
       return c.json({ message: "Team created", newTeam }, 201);
+    }
+  )
+  .post(
+    "/teammates",
+    getUser,
+    zValidator(
+      "json",
+      z.object({
+        hackathon_id: z.string().uuid(),
+      }),
+      (result, c) => {
+        console.log(result);
+        if (!result.success) {
+          return c.json({ message: "Invalid team name" }, 400);
+        }
+      }
+    ),
+    async (c) => {
+      const user = c.var.user;
+      const hackathon_id = c.req.valid("json").hackathon_id;
+      const potential_teammates = await db
+        .select({
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+        })
+        .from(user_hackathon_table)
+        .innerJoin(usersTable, eq(user_hackathon_table.user_id, usersTable.id))
+        .where(
+          and(
+            eq(user_hackathon_table.hackathon_id, hackathon_id),
+            isNull(user_hackathon_table.team_id),
+            ne(user_hackathon_table.user_id, user.id)
+          )
+        );
+      return c.json({ potential_teammates });
     }
   );
