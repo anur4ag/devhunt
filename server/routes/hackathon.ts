@@ -31,7 +31,7 @@ export const hackathonRoute = new Hono()
     return c.json({ hackathons }, 200);
   })
   .get(
-    "/event/:uuid",
+    "/:uuid",
     zValidator("param", uuidSchema, (result, c) => {
       if (!result.success) {
         return c.json({ message: "Invalid request param" }, 400);

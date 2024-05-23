@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@server/*": ["../server/*"]
+      "@server/*": ["../server/*"],
+      "@public/*": ["./public/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
