@@ -62,7 +62,7 @@ function NavBar() {
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-xl">{user?.given_name}</p>
+            <p className="font-bold text-xl cursor-pointer">{user?.given_name}</p>
           </div>
         ) : (
           <Login />
