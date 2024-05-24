@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as HackathonsImport } from './routes/hackathons'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as OrganizeHackathonImport } from './routes/OrganizeHackathon'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -24,6 +25,11 @@ const HackathonsRoute = HackathonsImport.update({
 
 const AuthenticatedRoute = AuthenticatedImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const OrganizeHackathonRoute = OrganizeHackathonImport.update({
+  path: '/OrganizeHackathon',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -41,6 +47,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/OrganizeHackathon': {
+      id: '/OrganizeHackathon'
+      path: '/OrganizeHackathon'
+      fullPath: '/OrganizeHackathon'
+      preLoaderRoute: typeof OrganizeHackathonImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated': {
@@ -62,6 +75,10 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexRoute, HackathonsRoute })
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  OrganizeHackathonRoute,
+  HackathonsRoute,
+})
 
 /* prettier-ignore-end */

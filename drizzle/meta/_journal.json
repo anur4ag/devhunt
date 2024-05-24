@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1716314075946,
-      "tag": "0000_superb_apocalypse",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1716384128187,
-      "tag": "0001_big_shen",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1716386385260,
-      "tag": "0002_cuddly_malcolm_colcord",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1716410312900,
-      "tag": "0003_jazzy_forge",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1716442654473,
-      "tag": "0004_fast_obadiah_stane",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1716442804371,
-      "tag": "0005_small_kat_farrell",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1716446159855,
-      "tag": "0006_chunky_ironclad",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1716447248264,
-      "tag": "0007_glamorous_nitro",
+      "when": 1716576169996,
+      "tag": "0000_medical_captain_cross",
       "breakpoints": true
     }
   ]

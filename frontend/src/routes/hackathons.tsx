@@ -23,7 +23,9 @@ function Hackathons() {
     <>
       <div className="w-full h-[230px] sm:h-[230px] md:h-[290px] lg:h-[300px] bg-[#3770ff] flex justify-center items-center">
         <MaxWidthWrapper className="w-full text-center ">
-          <p className="text-5xl pt-16 text-white font-bold">Applications open</p>
+          <p className="text-4xl lg:text-5xl pt-16 text-white font-bold">
+            Applications open
+          </p>
         </MaxWidthWrapper>
       </div>
       <div className="p-4 flex flex-col min-h-screen bg-gray-50 antialiased">
@@ -49,11 +51,10 @@ const RenderCards = () => {
   const { isPending, error, data } = useQuery(hackathonQueryOptions);
   if (isPending) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  console.log(data[0]);
   return (
     <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-1 sm:gap-x-6 lg:grid-cols-2 lg:gap-y-4 px-12">
       {data.map((hackathon) => (
-        <Card className="max-w-lg rounded-xl p-4">
+        <Card className="max-w-lg rounded-xl p-4" key={hackathon.uuid}>
           <CardHeader className="">
             <CardTitle className="flex justify-between items-center gap-8">
               <p className="text-4xl tracking-tight font-bold">

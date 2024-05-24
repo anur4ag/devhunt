@@ -11,6 +11,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import logo from "@public/logo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { NotebookPen } from "lucide-react";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -52,6 +53,15 @@ function NavBar() {
         </div>
         {user ? (
           <div className="flex items-center gap-2">
+            <div className="flex gap-2 ml-8 ">
+              <NotebookPen />
+              <Link
+                to="/OrganizeHackathon"
+                className="hover:text-muted-foreground [&.active]:text-black [&.active]:font-bold"
+              >
+                organize?
+              </Link>
+            </div>
             <Avatar>
               <AvatarImage
                 src={
@@ -62,7 +72,9 @@ function NavBar() {
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-xl cursor-pointer">{user?.given_name}</p>
+            <p className="font-bold text-xl cursor-pointer">
+              {user?.given_name}
+            </p>
           </div>
         ) : (
           <Login />

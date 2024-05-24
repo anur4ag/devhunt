@@ -15,8 +15,6 @@ const HackathonSchema = z.object({
   tagline: z.string(),
   desc: z.string(),
   cover_img: z.string().url(),
-  starts_at: z.date().optional(),
-  ends_at: z.date().optional(),
   is_online: z.boolean(),
   team_min: z.number(),
   team_max: z.number(),

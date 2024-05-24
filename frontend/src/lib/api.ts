@@ -9,7 +9,6 @@ export const api = client.api;
 export const hackathonQueryOptions = queryOptions({
   queryKey: ["hackathons"],
   queryFn: fetchHackathons,
-  staleTime: Infinity,
 });
 
 export const userQueryOptions = queryOptions({
