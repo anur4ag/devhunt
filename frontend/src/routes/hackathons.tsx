@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
 export const Route = createFileRoute("/hackathons")({
   component: Hackathons,
@@ -19,9 +20,16 @@ export const Route = createFileRoute("/hackathons")({
 
 function Hackathons() {
   return (
-    <div className="p-4 flex flex-col min-h-screen bg-gray-50 antialiased">
-      <RenderCards />
-    </div>
+    <>
+      <div className="w-full h-[230px] sm:h-[230px] md:h-[290px] lg:h-[300px] bg-[#3770ff] flex justify-center items-center">
+        <MaxWidthWrapper className="w-full text-center ">
+          <p className="text-5xl pt-16 text-white font-bold">Applications open</p>
+        </MaxWidthWrapper>
+      </div>
+      <div className="p-4 flex flex-col min-h-screen bg-gray-50 antialiased">
+        <RenderCards />
+      </div>
+    </>
   );
 }
 
