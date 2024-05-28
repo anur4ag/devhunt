@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/card";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -128,7 +127,7 @@ const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
       if (!res.ok) {
         throw new Error("Failed to create hackathon");
       }
-      navigate({ to: "/findTeammates" });
+      navigate({ to: `/${hackathon.uuid}` });
     },
   });
 
@@ -142,7 +141,9 @@ const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
       if (!res.ok) {
         throw new Error("Failed to create hackathon");
       }
-      navigate({ to: "/findTeammates" });
+      navigate({
+        to: `/${hackathon.uuid}`,
+      });
     },
   });
   return (
@@ -250,7 +251,6 @@ const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
           >
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction>dfd</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -12,20 +12,15 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as HackathonsImport } from './routes/hackathons'
-import { Route as FindTeammatesImport } from './routes/findTeammates'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as OrganizeHackathonImport } from './routes/OrganizeHackathon'
+import { Route as HackathonIdImport } from './routes/$hackathonId'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
 const HackathonsRoute = HackathonsImport.update({
   path: '/hackathons',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const FindTeammatesRoute = FindTeammatesImport.update({
-  path: '/findTeammates',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -36,6 +31,11 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 const OrganizeHackathonRoute = OrganizeHackathonImport.update({
   path: '/OrganizeHackathon',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HackathonIdRoute = HackathonIdImport.update({
+  path: '/$hackathonId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -55,6 +55,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/$hackathonId': {
+      id: '/$hackathonId'
+      path: '/$hackathonId'
+      fullPath: '/$hackathonId'
+      preLoaderRoute: typeof HackathonIdImport
+      parentRoute: typeof rootRoute
+    }
     '/OrganizeHackathon': {
       id: '/OrganizeHackathon'
       path: '/OrganizeHackathon'
@@ -67,13 +74,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthenticatedImport
-      parentRoute: typeof rootRoute
-    }
-    '/findTeammates': {
-      id: '/findTeammates'
-      path: '/findTeammates'
-      fullPath: '/findTeammates'
-      preLoaderRoute: typeof FindTeammatesImport
       parentRoute: typeof rootRoute
     }
     '/hackathons': {
@@ -90,8 +90,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  HackathonIdRoute,
   OrganizeHackathonRoute,
-  FindTeammatesRoute,
   HackathonsRoute,
 })
 
