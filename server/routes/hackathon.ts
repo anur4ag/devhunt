@@ -154,8 +154,9 @@ export const hackathonRoute = new Hono()
       const potential_teammates = await db
         .select({
           id: usersTable.id,
-          name: usersTable.name,
+          given_name: usersTable.name,
           email: usersTable.email,
+          picture: usersTable.picture,
         })
         .from(user_hackathon_table)
         .innerJoin(usersTable, eq(user_hackathon_table.user_id, usersTable.id))

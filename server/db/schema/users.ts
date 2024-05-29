@@ -5,6 +5,7 @@ export const users = pgTable(
     id: text("user_id").notNull().primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull(),
+    picture: text("picture"),
   },
   (users) => {
     return {

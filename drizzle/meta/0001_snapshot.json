@@ -1,6 +1,6 @@
 {
-  "id": "18bc7e56-5a80-493a-b173-a1ea7888f381",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "badff783-b94a-4d40-aad5-51ca6a020aad",
+  "prevId": "18bc7e56-5a80-493a-b173-a1ea7888f381",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -260,17 +260,11 @@
           "primaryKey": true,
           "notNull": true
         },
-        "given_name": {
-          "name": "given_name",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "family_name": {
-          "name": "family_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "email": {
           "name": "email",

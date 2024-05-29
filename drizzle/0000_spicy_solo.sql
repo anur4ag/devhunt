@@ -30,8 +30,10 @@ CREATE TABLE IF NOT EXISTS "user_hackathons" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"user_id" text PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
-	"email" text NOT NULL
+	"given_name" text NOT NULL,
+	"family_name" text,
+	"email" text NOT NULL,
+	"picture" text
 );
 --> statement-breakpoint
 DO $$ BEGIN

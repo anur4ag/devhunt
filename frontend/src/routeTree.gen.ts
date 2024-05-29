@@ -16,6 +16,8 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as OrganizeHackathonImport } from './routes/OrganizeHackathon'
 import { Route as HackathonIdImport } from './routes/$hackathonId'
 import { Route as IndexImport } from './routes/index'
+import { Route as HackathonIdIndexImport } from './routes/$hackathonId/index'
+import { Route as HackathonIdFindTeamImport } from './routes/$hackathonId/findTeam'
 
 // Create/Update Routes
 
@@ -42,6 +44,16 @@ const HackathonIdRoute = HackathonIdImport.update({
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const HackathonIdIndexRoute = HackathonIdIndexImport.update({
+  path: '/',
+  getParentRoute: () => HackathonIdRoute,
+} as any)
+
+const HackathonIdFindTeamRoute = HackathonIdFindTeamImport.update({
+  path: '/findTeam',
+  getParentRoute: () => HackathonIdRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -83,6 +95,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HackathonsImport
       parentRoute: typeof rootRoute
     }
+    '/$hackathonId/findTeam': {
+      id: '/$hackathonId/findTeam'
+      path: '/findTeam'
+      fullPath: '/$hackathonId/findTeam'
+      preLoaderRoute: typeof HackathonIdFindTeamImport
+      parentRoute: typeof HackathonIdImport
+    }
+    '/$hackathonId/': {
+      id: '/$hackathonId/'
+      path: '/'
+      fullPath: '/$hackathonId/'
+      preLoaderRoute: typeof HackathonIdIndexImport
+      parentRoute: typeof HackathonIdImport
+    }
   }
 }
 
@@ -90,7 +116,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  HackathonIdRoute,
+  HackathonIdRoute: HackathonIdRoute.addChildren({
+    HackathonIdFindTeamRoute,
+    HackathonIdIndexRoute,
+  }),
   OrganizeHackathonRoute,
   HackathonsRoute,
 })

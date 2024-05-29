@@ -39,6 +39,7 @@ export const authRoute = new Hono()
         id: user.id,
         name: user.given_name,
         email: user.email,
+        picture: user.picture,
       });
       console.log("inserted user: ", insertedUser);
       return c.redirect("/");
