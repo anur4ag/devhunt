@@ -21,13 +21,16 @@ export function individualHackathonQueryOptions(hackathon_id: string) {
   return queryOptions({
     queryKey: ["individual-hackathon", hackathon_id],
     queryFn: fetchIndividualHackathon,
+    staleTime: Infinity,
   });
 }
 
-export const findPotentialTeammatesQueryOptions = queryOptions({
-  queryKey: ["potential-teammates"],
-  queryFn: fetchPotentialTeammates,
-});
+export function findPotentialTeammatesQueryOptions(hackathon_id: string) {
+  return queryOptions({
+    queryKey: ["potential-teammates", hackathon_id],
+    queryFn: fetchPotentialTeammates,
+  });
+}
 
 // export const individualHackathonQueryOptions = queryOptions({
 //   queryKey: ["individual-hackathon"],
@@ -43,6 +46,7 @@ async function fetchHackathons() {
   const data = await res.json();
   return data.hackathons;
 }
+
 async function fetchIndividualHackathon({
   queryKey,
 }: {
@@ -62,10 +66,16 @@ async function fetchIndividualHackathon({
   return data.hackathon[0];
 }
 
-async function fetchPotentialTeammates() {
+async function fetchPotentialTeammates({
+  queryKey,
+}: {
+  queryKey: [string, string];
+}) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_key, hackathon_id] = queryKey;
   const res = await api.hackathons.teammates.$post({
     json: {
-      hackathon_id: "e3141227-048d-4d2f-860d-344f354fcd47",
+      hackathon_id: hackathon_id,
     },
   });
   if (!res.ok) {

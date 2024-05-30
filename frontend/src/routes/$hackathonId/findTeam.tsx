@@ -77,8 +77,9 @@ const Tags: React.FC<TagsProps> = ({ content, icon }) => {
 };
 
 function PersonCard() {
+  const hackathon_id = Route.useParams().hackathonId;
   const { isPending, error, data } = useQuery(
-    findPotentialTeammatesQueryOptions
+    findPotentialTeammatesQueryOptions(hackathon_id)
   );
   if (isPending) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

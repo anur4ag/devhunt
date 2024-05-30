@@ -121,16 +121,38 @@ export const hackathonRoute = new Hono()
         })
         .returning();
       const team_id = newTeam[0].id;
-      const updateUserHackathon = await db
-        .update(user_hackathon_table)
-        .set({ team_id })
+      const existingTeam = await db
+        .select()
+        .from(user_hackathon_table)
         .where(
           and(
             eq(user_hackathon_table.user_id, user.id),
             eq(user_hackathon_table.hackathon_id, hackathon_id)
           )
         );
-      return c.json({ message: "Team created", newTeam }, 201);
+      if (existingTeam.length === 0) {
+        console.log("not regesterred -------> regestering");
+        await db.insert(user_hackathon_table).values({
+          user_id: user.id,
+          hackathon_id,
+          team_id,
+        });
+        return c.json(
+          { message: "Team created and Registered for hackathon", newTeam },
+          201
+        );
+      } else {
+        const updateUserHackathon = await db
+          .update(user_hackathon_table)
+          .set({ team_id })
+          .where(
+            and(
+              eq(user_hackathon_table.user_id, user.id),
+              eq(user_hackathon_table.hackathon_id, hackathon_id)
+            )
+          );
+        return c.json({ message: "Team updated", newTeam }, 201);
+      }
     }
   )
   .post(
@@ -144,7 +166,7 @@ export const hackathonRoute = new Hono()
       (result, c) => {
         console.log(result);
         if (!result.success) {
-          return c.json({ message: "Invalid team name" }, 400);
+          return c.json({ message: "Invalid hackathon id" }, 400);
         }
       }
     ),

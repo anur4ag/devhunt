@@ -12,6 +12,14 @@ import logo from "@public/logo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { NotebookPen } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -72,9 +80,24 @@ function NavBar() {
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-xl cursor-pointer">
-              {user?.given_name}
-            </p>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <p className="font-bold text-xl cursor-pointer">
+                  {user?.given_name}
+                </p>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="ms-8">
+                <DropdownMenuLabel>Logout?</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="w-full">
+                  <a href="/api/logout" className="w-full">
+                    <Button className="w-full" variant={"destructive"}>
+                      Logout
+                    </Button>
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
           <Login />
