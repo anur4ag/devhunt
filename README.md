@@ -24,6 +24,8 @@ Follow these steps to install the project dependencies:
   cd frontend && bun install
   ```
 
+3. Change the name of `.example.env` to `.env` and populate it with the PostgreSQL database URL, and Kinde Credentials.
+
 ## Running the Project
 
 To run the project, use the following command in the root directory:
