@@ -3,13 +3,15 @@
   "module": "server/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"bun --watch server/index.ts\" \"cd frontend && bun dev\"",
-    "build": "bun server/index.ts",
+    "dev": "bun --watch server/index.ts",
+    "conc-dev": "concurrently \"bun --watch server/index.ts\" \"cd frontend && bun dev\"",
+    "start": "bun server/index.ts",
     "db-generate": "bun drizzle-kit generate",
     "db-push": "bun ./migrate.ts",
     "studio": "bunx drizzle-kit studio"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.7",
     "@types/bun": "latest",
     "concurrently": "^8.2.2",
     "drizzle-kit": "^0.21.2"

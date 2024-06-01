@@ -15,6 +15,13 @@
       "when": 1716930684074,
       "tag": "0001_white_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717146143046,
+      "tag": "0002_illegal_loki",
+      "breakpoints": true
     }
   ]
 }

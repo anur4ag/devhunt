@@ -8,6 +8,7 @@ import { getUser } from "../kinde";
 import { user_hackathons as user_hackathon_table } from "../db/schema/user_hackathon";
 import { teams as teamsTable } from "../db/schema/teams";
 import { users as usersTable } from "../db/schema/users";
+import { hackathon_tags as hackathonTagsTable } from "../db/schema/hackathonTags";
 
 const HackathonSchema = z.object({
   uuid: z.string().uuid(),
@@ -26,7 +27,8 @@ const HackathonPostSchema = HackathonSchema.omit({ uuid: true });
 export const hackathonRoute = new Hono()
   .get("/", async (c) => {
     const hackathons = await db.select().from(hackathonTable);
-    return c.json({ hackathons }, 200);
+    const tags = await db.select().from(hackathonTagsTable);
+    return c.json({ hackathons, tags }, 200);
   })
   .get(
     "/:uuid",

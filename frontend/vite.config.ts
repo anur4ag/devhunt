@@ -8,8 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@server": path.resolve(import.meta.dir, "../server"),
-      "@public": path.resolve(import.meta.dir, "./public")
+      "@server": path.resolve(__dirname, "../server"),
+      "@public": path.resolve(__dirname, "./public")
     },
   },
   server: {

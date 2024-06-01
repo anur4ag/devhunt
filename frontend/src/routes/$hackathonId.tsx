@@ -48,7 +48,7 @@ function FindTeammate() {
               to="/$hackathonId"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "w-full flex justify-around p-8 "
+                "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
               )}
               onClick={() => {}}
             >

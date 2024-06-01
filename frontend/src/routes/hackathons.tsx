@@ -65,8 +65,8 @@ const RenderCards = () => {
                 <LinkIcon />
               </div>
             </CardTitle>
-            <CardDescription className="tracking-wider text-md ">
-              Hackathon
+            <CardDescription className="tracking-tight text-md ">
+              {hackathon.tagline}
             </CardDescription>
           </CardHeader>
           <CardContent>
