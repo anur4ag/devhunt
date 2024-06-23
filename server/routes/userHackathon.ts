@@ -25,11 +25,9 @@ export const userHackathonRoute = new Hono()
     const user_registered_hackathons = await db
       .select()
       .from(userHackathonTable)
-      .innerJoin(
-        hackathonsTable,
-        eq(userHackathonTable.hackathon_id, hackathonsTable.uuid)
-      )
       .where(eq(userHackathonTable.user_id, user.id));
-    console.log(user_registered_hackathons);
-    return c.json(user_registered_hackathons);
+    const hackathonIds = user_registered_hackathons.map(
+      (hackathon) => hackathon.hackathon_id
+    );
+    return c.json(hackathonIds);
   });

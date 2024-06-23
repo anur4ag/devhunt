@@ -16,7 +16,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { individualHackathonQueryOptions } from "@/lib/api";
+import {
+  individualHackathonQueryOptions,
+  isUserRegisteredHackathon,
+} from "@/lib/api";
 
 export const Route = createFileRoute("/$hackathonId/overview")({
   loader: async ({ context, params }) => {
@@ -25,7 +28,14 @@ export const Route = createFileRoute("/$hackathonId/overview")({
       const data = await queryClient.fetchQuery(
         individualHackathonQueryOptions(params.hackathonId)
       );
-      return data;
+      const isUserRegistered = await queryClient.fetchQuery(
+        isUserRegisteredHackathon
+      );
+      let userRegistered = false;
+      if (isUserRegistered.includes(data.uuid)) {
+        userRegistered = true;
+      }
+      return { data, userRegistered };
     } catch (e) {
       console.error(e);
       return redirect({ to: "/hackathons" });
@@ -35,8 +45,9 @@ export const Route = createFileRoute("/$hackathonId/overview")({
 });
 
 function HackathonHome() {
-  const data = Route.useLoaderData();
+  const { data, userRegistered } = Route.useLoaderData();
   const date = new Date(data.starts_at);
+  console.log(userRegistered);
 
   console.log(data);
   return (
@@ -58,7 +69,7 @@ function HackathonHome() {
           <h1 className="text-center text-3xl font-bold tracking-tight">
             {data.name}
           </h1>
-          <p className="mt-4 text-center">{data.desc}</p>
+          <p className="mt-4">{data.desc}</p>
           <div className="flex md:flex-row flex-col mt-4 items-center md:justify-center gap-8">
             <Card className="w-full sm:w-1/2 md:w-1/3 drop-shadow-md">
               <CardHeader>
@@ -80,7 +91,7 @@ function HackathonHome() {
             </Card>
           </div>
           <div className="applyButton w-full sm:w-auto md:w-auto mt-4 sm:mt-0">
-            <RegisterDialog hackathon={data} />
+            <RegisterDialog hackathon={data} isRegistered={userRegistered} />
           </div>
         </MaxWidthWrapper>
       </div>
@@ -88,7 +99,10 @@ function HackathonHome() {
   );
 }
 
-const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
+const RegisterDialog: React.FC<HackathonProps> = ({
+  hackathon,
+  isRegistered,
+}) => {
   const navigate = useNavigate();
 
   const teamForm = useForm({
@@ -123,10 +137,13 @@ const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
   });
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className="">
+      <AlertDialogTrigger asChild className="" disabled={!isRegistered}>
         <div className="w-full flex justify-center pt-8">
-          <Button className="px-8 py-6 w-full sm:w-auto md:w-auto text-lg rounded-full">
-            Apply now
+          <Button
+            className={`px-8 py-6 w-full sm:w-auto md:w-auto text-lg rounded-full ${isRegistered ? "bg-[#ECFDF3] text-[#008A2E] border-[#008A2E] border-2 hover:none" : "bg-blue-500"}`}
+            variant={isRegistered ? null : "default"}
+          >
+            {isRegistered ? "Already Registered ✅" : "Register"}
           </Button>
         </div>
       </AlertDialogTrigger>
@@ -137,87 +154,71 @@ const RegisterDialog: React.FC<HackathonProps> = ({ hackathon }) => {
             Create a new team or submit individual application to find hackers
             who are participating in this hackathon.
           </AlertDialogDescription>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              individualForm.handleSubmit();
-            }}
-          >
-            <individualForm.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting ? "..." : "Submit individual application"}
-                </Button>
-              )}
-            />
-          </form>
-          <Divider />
-          <AlertDialogTitle className="text-center text-xl">
-            Create a team
-          </AlertDialogTitle>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              teamForm.handleSubmit();
-            }}
-          >
-            <teamForm.Field
-              name="team_name"
-              children={(field) => (
-                <>
-                  <Label htmlFor={field.name}>Team name</Label>
-                  <Input
-                    id={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    type="text"
-                    placeholder="title"
-                    required
-                  />
-                  {field.state.meta.touchedErrors ? (
-                    <em>{field.state.meta.touchedErrors}</em>
-                  ) : null}
-                  {field.state.meta.isValidating ? "Validating..." : null}
-                </>
-              )}
-            />
-            {/* <teamForm.Field
-              name="hackathon_id"
-              children={(field) => (
-                <>
-                  <Label htmlFor={field.name}>Hackathon ID</Label>
-                  <Input
-                    id={field.name}
-                    type="text"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    disabled
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="hackathon_id"
-                    required
-                  />
-                  {field.state.meta.touchedErrors ? (
-                    <em>{field.state.meta.touchedErrors}</em>
-                  ) : null}
-                  {field.state.meta.isValidating ? "Validating..." : null}
-                </>
-              )}
-            /> */}
-            <teamForm.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting ? "..." : "Create team"}
-                </Button>
-              )}
-            />
-          </form>
+          {!isRegistered ? (
+            <>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  individualForm.handleSubmit();
+                }}
+              >
+                <individualForm.Subscribe
+                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                  children={([canSubmit, isSubmitting]) => (
+                    <Button type="submit" disabled={!canSubmit}>
+                      {isSubmitting ? "..." : "Submit individual application"}
+                    </Button>
+                  )}
+                />
+              </form>
+              <Divider />
+              <AlertDialogTitle className="text-center text-xl">
+                Create a team
+              </AlertDialogTitle>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  teamForm.handleSubmit();
+                }}
+              >
+                <teamForm.Field
+                  name="team_name"
+                  children={(field) => (
+                    <>
+                      <Label htmlFor={field.name}>Team name</Label>
+                      <Input
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type="text"
+                        placeholder="title"
+                        required
+                      />
+                      {field.state.meta.touchedErrors ? (
+                        <em>{field.state.meta.touchedErrors}</em>
+                      ) : null}
+                      {field.state.meta.isValidating ? "Validating..." : null}
+                    </>
+                  )}
+                />
+                <teamForm.Subscribe
+                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                  children={([canSubmit, isSubmitting]) => (
+                    <Button type="submit" disabled={!canSubmit}>
+                      {isSubmitting ? "..." : "Create team"}
+                    </Button>
+                  )}
+                />
+              </form>
+            </>
+          ) : (
+            <p>Already registered for hackathon</p>
+          )}
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -234,6 +235,7 @@ interface HackathonProps {
     cover_img: string;
     uuid: string;
   };
+  isRegistered: boolean;
 }
 
 function Divider() {

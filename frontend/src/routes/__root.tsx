@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import NewNav from "@/components/NewNav";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -46,18 +47,6 @@ function NavBar() {
         <div className="flex items-center gap-2">
           <img src={logo} alt="" className="max-h-[50px] max-w-[50px]" />
           <p className="text-3xl font-extrabold tracking-tight pe-4">Devhunt</p>
-          <Link
-            to="/"
-            className="[&.active]:text-black [&.active]:font-bold text-xl font-semibold text-muted-foreground"
-          >
-            Home
-          </Link>{" "}
-          <Link
-            to="/hackathons"
-            className="[&.active]:text-black [&.active]:font-bold text-xl font-semibold text-muted-foreground"
-          >
-            Hackathon
-          </Link>
         </div>
         {user ? (
           <div className="flex items-center gap-2">
@@ -112,6 +101,7 @@ function Root() {
     <>
       <NavBar />
       <hr />
+      <NewNav />
       <Outlet />
       <TanStackRouterDevtools />
     </>

@@ -32,6 +32,11 @@ export function findPotentialTeammatesQueryOptions(hackathon_id: string) {
   });
 }
 
+export const isUserRegisteredHackathon = queryOptions({
+  queryKey: ["user-registered-hackathon"],
+  queryFn: fetchUserRegisteredHackathon,
+});
+
 // export const individualHackathonQueryOptions = queryOptions({
 //   queryKey: ["individual-hackathon"],
 //   queryFn: fetchIndividualHackathon(),
@@ -87,6 +92,15 @@ async function fetchPotentialTeammates({
 
 async function getCurrentUser() {
   const res = await api.me.$get();
+  if (!res.ok) {
+    throw new Error("server error");
+  }
+  const data = await res.json();
+  return data;
+}
+
+async function fetchUserRegisteredHackathon() {
+  const res = await api.user.userhackathons.$get();
   if (!res.ok) {
     throw new Error("server error");
   }
