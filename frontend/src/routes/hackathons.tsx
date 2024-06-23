@@ -80,7 +80,7 @@ const RenderCards = () => {
                 <Tags content="Social" />
               </div>
               <div className="applyButton w-full sm:w-auto md:w-auto mt-4 sm:mt-0">
-                <Link to={`/${hackathon.uuid}`}>
+                <Link to={`/${hackathon.uuid}/overview`}>
                   <Button className="px-8 py-6 w-full sm:w-auto md:w-auto text-lg rounded-lg">
                     Apply now
                   </Button>

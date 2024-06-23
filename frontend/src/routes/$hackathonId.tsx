@@ -45,7 +45,7 @@ function FindTeammate() {
           </div>
           <div className="flex flex-col gap-4">
             <Link
-              to="/$hackathonId"
+              to="/$hackathonId/overview"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
                 "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
@@ -64,7 +64,7 @@ function FindTeammate() {
               onClick={() => {}}
             >
               <Clipboard size={24} />
-              Application
+              Find Hackers
             </Link>
             {/* <Link
               className={cn(

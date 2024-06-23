@@ -16,7 +16,7 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as OrganizeHackathonImport } from './routes/OrganizeHackathon'
 import { Route as HackathonIdImport } from './routes/$hackathonId'
 import { Route as IndexImport } from './routes/index'
-import { Route as HackathonIdIndexImport } from './routes/$hackathonId/index'
+import { Route as HackathonIdOverviewImport } from './routes/$hackathonId/overview'
 import { Route as HackathonIdFindTeamImport } from './routes/$hackathonId/findTeam'
 
 // Create/Update Routes
@@ -46,8 +46,8 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const HackathonIdIndexRoute = HackathonIdIndexImport.update({
-  path: '/',
+const HackathonIdOverviewRoute = HackathonIdOverviewImport.update({
+  path: '/overview',
   getParentRoute: () => HackathonIdRoute,
 } as any)
 
@@ -102,11 +102,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HackathonIdFindTeamImport
       parentRoute: typeof HackathonIdImport
     }
-    '/$hackathonId/': {
-      id: '/$hackathonId/'
-      path: '/'
-      fullPath: '/$hackathonId/'
-      preLoaderRoute: typeof HackathonIdIndexImport
+    '/$hackathonId/overview': {
+      id: '/$hackathonId/overview'
+      path: '/overview'
+      fullPath: '/$hackathonId/overview'
+      preLoaderRoute: typeof HackathonIdOverviewImport
       parentRoute: typeof HackathonIdImport
     }
   }
@@ -118,7 +118,7 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   HackathonIdRoute: HackathonIdRoute.addChildren({
     HackathonIdFindTeamRoute,
-    HackathonIdIndexRoute,
+    HackathonIdOverviewRoute,
   }),
   OrganizeHackathonRoute,
   HackathonsRoute,

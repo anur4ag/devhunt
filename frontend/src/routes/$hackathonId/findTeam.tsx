@@ -83,6 +83,8 @@ function PersonCard() {
   );
   if (isPending) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
+  if (data.potential_teammates.length === 0)
+    return <div>No potential teammates found</div>;
   return (
     <>
       {data.potential_teammates.map((person) => (

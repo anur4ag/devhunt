@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { individualHackathonQueryOptions } from "@/lib/api";
 
-export const Route = createFileRoute("/$hackathonId/")({
+export const Route = createFileRoute("/$hackathonId/overview")({
   loader: async ({ context, params }) => {
     const queryClient = context.queryClient;
     try {
