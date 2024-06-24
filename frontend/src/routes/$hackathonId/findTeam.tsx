@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { findPotentialTeammatesQueryOptions } from "@/lib/api";
+import { api, findPotentialTeammatesQueryOptions } from "@/lib/api";
+import { addUserToTeamQueryOptions } from "@/lib/api";
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ import {
   Handshake,
   Bookmark,
 } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/$hackathonId/findTeam")({
   component: FindTeam,
@@ -77,18 +79,34 @@ const Tags: React.FC<TagsProps> = ({ content, icon }) => {
 };
 
 function PersonCard() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const hackathon_id = Route.useParams().hackathonId;
-  const { isPending, error, data } = useQuery(
+  const findTeammateQuery = useQuery(
     findPotentialTeammatesQueryOptions(hackathon_id)
   );
-  if (isPending) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (data.potential_teammates.length === 0)
+  if (findTeammateQuery.isPending) return <div>Loading...</div>;
+  if (findTeammateQuery.error)
+    return <div>Error: {findTeammateQuery.error.message}</div>;
+  if (findTeammateQuery.data.potential_teammates.length === 0)
     return <div>No potential teammates found</div>;
-  console.log(data.potential_teammates);
+
+  const handleButtonClick = async (hackathonId: string, personId: string) => {
+    setIsLoading(true);
+    try {
+      const data = await onButtonClick(hackathonId, personId);
+      console.log(data);
+    } catch (error) {
+      // Handle error if needed
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
-      {data.potential_teammates.map((person) => (
+      {findTeammateQuery.data.potential_teammates.map((person) => (
         <Card key={person.id} className="rounded-2xl  drop-shadow-sm">
           <CardHeader className="bg-[#f5f3f4cd] rounded-t-2xl">
             <div className="flex items-center justify-between">
@@ -105,9 +123,45 @@ function PersonCard() {
                   <CardDescription>{person.email}</CardDescription>
                 </div>
               </div>
-              <Button className="text-xs flex gap-2">
-                <Handshake size={24} />
-                Invite to join team
+              <Button
+                onClick={() => handleButtonClick(hackathon_id, person.id)}
+                className="text-xs flex gap-2"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="2em"
+                      height="2em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                        opacity="0.25"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          dur="0.75s"
+                          repeatCount="indefinite"
+                          type="rotate"
+                          values="0 12 12;360 12 12"
+                        />
+                      </path>
+                    </svg>
+                    <p>Adding to team...</p>
+                  </>
+                ) : (
+                  <>
+                    <Handshake size={24} />
+                    Invite to join team
+                  </>
+                )}
               </Button>
             </div>
           </CardHeader>
@@ -159,6 +213,19 @@ function PersonCard() {
   );
 }
 
+async function onButtonClick(hackathon_id: string, user_id: string) {
+  const res = await api.user.addtoteam.$put({
+    json: {
+      hackathonId: hackathon_id,
+      userId: user_id,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("server error");
+  }
+  const data = await res.json();
+  return data;
+}
 interface TagsProps {
   icon: React.ReactNode;
   content: string;

@@ -37,6 +37,16 @@ export const isUserRegisteredHackathon = queryOptions({
   queryFn: fetchUserRegisteredHackathon,
 });
 
+export function addUserToTeamQueryOptions(
+  hackathon_id: string,
+  user_id: string
+) {
+  return queryOptions({
+    queryKey: ["add-user-to-team", hackathon_id, user_id],
+    queryFn: addUserToTeamFunction,
+  });
+}
+
 // export const individualHackathonQueryOptions = queryOptions({
 //   queryKey: ["individual-hackathon"],
 //   queryFn: fetchIndividualHackathon(),
@@ -101,6 +111,26 @@ async function getCurrentUser() {
 
 async function fetchUserRegisteredHackathon() {
   const res = await api.user.userhackathons.$get();
+  if (!res.ok) {
+    throw new Error("server error");
+  }
+  const data = await res.json();
+  return data;
+}
+
+async function addUserToTeamFunction({
+  queryKey,
+}: {
+  queryKey: [string, string, string];
+}) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_key, hackathon_id, user_id] = queryKey;
+  const res = await api.user.addtoteam.$put({
+    json: {
+      hackathonId: hackathon_id,
+      userId: user_id,
+    },
+  });
   if (!res.ok) {
     throw new Error("server error");
   }
