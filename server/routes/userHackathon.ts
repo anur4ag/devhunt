@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { getUser } from "../kinde";
 import { db } from "../db";
 import { users as usersTable } from "../db/schema/users";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, ne } from "drizzle-orm";
 import { user_hackathons as userHackathonTable } from "../db/schema/user_hackathon";
 import { hackathons as hackathonsTable } from "../db/schema/hackathons";
 import { teams as teamsTable } from "../db/schema/teams";
@@ -99,27 +99,40 @@ export const userHackathonRoute = new Hono()
           )
         );
       if (userHackathon.length === 0) {
-        return c.json({ message: "User not registered for this hackathon" });
+        return c.json({
+          message: "User not registered for this hackathon",
+          case: 1,
+        });
       }
       const teamId = userHackathon[0].team_id;
+      if (teamId === null) {
+        return c.json({ message: "User not in any team", case: 2 });
+      }
       const teamMembers = await db
         .select()
         .from(userHackathonTable)
-        .where(eq(userHackathonTable.team_id, teamId));
+        .where(
+          and(
+            eq(userHackathonTable.team_id, teamId),
+            ne(userHackathonTable.user_id, user.id)
+          )
+        );
       const teamMembersId = teamMembers.map((member) => member.user_id);
+
+      const teamDetails = await db
+        .select({ teamName: teamsTable.name, createdBy: teamsTable.created_by })
+        .from(teamsTable)
+        .where(eq(teamsTable.id, teamId));
+
       const teamMembersDetails = await db
         .select()
         .from(usersTable)
         .where(inArray(usersTable.id, teamMembersId));
-
-      const teamDetails = await db
-        .select({ teamName: teamsTable.name })
-        .from(teamsTable)
-        .where(eq(teamsTable.id, teamId));
       return c.json({
-        createdBy: user.given_name,
+        createdBy: { name: teamDetails[0].createdBy },
         teamName: teamDetails[0].teamName,
         teamMembers: teamMembersDetails,
+        case: 3,
       });
     }
   );
