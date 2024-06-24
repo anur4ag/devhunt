@@ -31,3 +31,6 @@ export const userHackathonRoute = new Hono()
     );
     return c.json(hackathonIds);
   });
+// .put("/register/:hackathonId", getUser, async (c) => {
+
+// })

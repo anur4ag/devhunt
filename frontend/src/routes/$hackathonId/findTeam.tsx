@@ -85,10 +85,11 @@ function PersonCard() {
   if (error) return <div>Error: {error.message}</div>;
   if (data.potential_teammates.length === 0)
     return <div>No potential teammates found</div>;
+  console.log(data.potential_teammates);
   return (
     <>
       {data.potential_teammates.map((person) => (
-        <Card className="rounded-2xl  drop-shadow-sm">
+        <Card key={person.id} className="rounded-2xl  drop-shadow-sm">
           <CardHeader className="bg-[#f5f3f4cd] rounded-t-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
