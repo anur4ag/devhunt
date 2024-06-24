@@ -20,6 +20,7 @@ import {
   individualHackathonQueryOptions,
   isUserRegisteredHackathon,
 } from "@/lib/api";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$hackathonId/overview")({
   loader: async ({ context, params }) => {
@@ -38,6 +39,7 @@ export const Route = createFileRoute("/$hackathonId/overview")({
       return { data, userRegistered };
     } catch (e) {
       console.error(e);
+      toast.error("Please login first");
       return redirect({ to: "/hackathons" });
     }
   },

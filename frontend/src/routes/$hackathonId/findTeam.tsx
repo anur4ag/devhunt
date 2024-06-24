@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api, findPotentialTeammatesQueryOptions } from "@/lib/api";
-import { addUserToTeamQueryOptions } from "@/lib/api";
 import {
   Card,
   CardContent,

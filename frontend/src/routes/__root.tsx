@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import NewNav from "@/components/NewNav";
-
+import { Toaster } from "sonner";
 interface MyRouterContext {
   queryClient: QueryClient;
 }
@@ -103,6 +103,7 @@ function Root() {
       <hr />
       <NewNav />
       <Outlet />
+      <Toaster richColors />
       <TanStackRouterDevtools />
     </>
   );
@@ -111,7 +112,7 @@ function Root() {
 const Login = () => {
   return (
     <Button className="font-nunito font-bold text-xl antialiased">
-      <a href="/api/login">Login!</a>
+      <a href="/api/login">Login</a>
     </Button>
   );
 };
