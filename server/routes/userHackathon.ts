@@ -2,9 +2,13 @@ import { Hono } from "hono";
 import { getUser } from "../kinde";
 import { db } from "../db";
 import { users as usersTable } from "../db/schema/users";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { user_hackathons as userHackathonTable } from "../db/schema/user_hackathon";
 import { hackathons as hackathonsTable } from "../db/schema/hackathons";
+import { teams as teamsTable } from "../db/schema/teams";
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
+import { uuid } from "drizzle-orm/pg-core";
 
 export const userHackathonRoute = new Hono()
   .get("/profile", getUser, async (c) => {
@@ -30,7 +34,92 @@ export const userHackathonRoute = new Hono()
       (hackathon) => hackathon.hackathon_id
     );
     return c.json(hackathonIds);
-  });
-// .put("/register/:hackathonId", getUser, async (c) => {
+  })
+  .put(
+    "/addtoteam",
+    getUser,
+    zValidator(
+      "json",
+      z.object({ hackathonId: z.string().uuid(), userId: z.string() }),
+      (result, c) => {
+        if (!result.success) {
+          console.log(result);
+          return c.json({ message: "Invalid request body" }, 400);
+        }
+      }
+    ),
+    async (c) => {
+      const user = c.var.user;
+      const { hackathonId, userId } = c.req.valid("json");
+      console.log(hackathonId, userId);
+      const userHackathon = await db
+        .select()
+        .from(userHackathonTable)
+        .where(
+          and(
+            eq(userHackathonTable.user_id, user.id),
+            eq(userHackathonTable.hackathon_id, hackathonId)
+          )
+        );
+      if (userHackathon.length > 0) {
+        await db
+          .update(userHackathonTable)
+          .set({ team_id: userHackathon[0].team_id })
+          .where(eq(userHackathonTable.user_id, userId));
+        return c.json({
+          message: "Added to team successfully",
+        });
+      } else {
+        return c.json({ message: "User not registered for this hackathon" });
+      }
+    }
+  )
+  .get(
+    "/myteam/:hackathonId",
+    zValidator(
+      "param",
+      z.object({ hackathonId: z.string().uuid() }),
+      (result, c) => {
+        if (!result.success) {
+          return c.json({ message: "Invalid request param" }, 400);
+        }
+      }
+    ),
+    getUser,
+    async (c) => {
+      const user = c.var.user;
+      const { hackathonId } = c.req.valid("param");
+      const userHackathon = await db
+        .select()
+        .from(userHackathonTable)
+        .where(
+          and(
+            eq(userHackathonTable.user_id, user.id),
+            eq(userHackathonTable.hackathon_id, hackathonId)
+          )
+        );
+      if (userHackathon.length === 0) {
+        return c.json({ message: "User not registered for this hackathon" });
+      }
+      const teamId = userHackathon[0].team_id;
+      const teamMembers = await db
+        .select()
+        .from(userHackathonTable)
+        .where(eq(userHackathonTable.team_id, teamId));
+      const teamMembersId = teamMembers.map((member) => member.user_id);
+      const teamMembersDetails = await db
+        .select()
+        .from(usersTable)
+        .where(inArray(usersTable.id, teamMembersId));
 
-// })
+      const teamDetails = await db
+        .select({ teamName: teamsTable.name })
+        .from(teamsTable)
+        .where(eq(teamsTable.id, teamId));
+      return c.json({
+        createdBy: user.given_name,
+        teamName: teamDetails[0].teamName,
+        teamMembers: teamMembersDetails,
+      });
+    }
+  );

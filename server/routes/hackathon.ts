@@ -133,7 +133,7 @@ export const hackathonRoute = new Hono()
           )
         );
       if (existingTeam.length === 0) {
-        console.log("not regesterred -------> regestering");
+        console.log("not registered -------> regestering");
         await db.insert(user_hackathon_table).values({
           user_id: user.id,
           hackathon_id,
