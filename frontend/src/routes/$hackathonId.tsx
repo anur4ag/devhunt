@@ -7,7 +7,7 @@ import {
   createFileRoute,
   redirect,
 } from "@tanstack/react-router";
-import { Clipboard, Home } from "lucide-react";
+import { Clipboard, Home, Handshake } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 
@@ -66,16 +66,17 @@ function FindTeammate() {
               <Clipboard size={24} />
               Find Hackers
             </Link>
-            {/* <Link
+            <Link
+              to="/$hackathonId/myteam"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "w-full flex gap-4 justify-around p-8"
+                "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
               )}
               onClick={() => {}}
             >
-              <Medal size={24} />
-              Prizes
-            </Link> */}
+              <Handshake size={24} />
+              My Team
+            </Link>
           </div>
         </div>
       </div>

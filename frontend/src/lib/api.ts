@@ -47,10 +47,12 @@ export function addUserToTeamQueryOptions(
   });
 }
 
-// export const individualHackathonQueryOptions = queryOptions({
-//   queryKey: ["individual-hackathon"],
-//   queryFn: fetchIndividualHackathon(),
-// });
+export function getTeamQueryOptions(hackathon_id: string) {
+  return queryOptions({
+    queryKey: ["get-team-details", hackathon_id],
+    queryFn: fetchTeamDetails,
+  });
+}
 
 /*--------------- Query Functions ------------- */
 async function fetchHackathons() {
@@ -133,6 +135,21 @@ async function addUserToTeamFunction({
   });
   if (!res.ok) {
     throw new Error("server error");
+  }
+  const data = await res.json();
+  return data;
+}
+
+async function fetchTeamDetails({ queryKey }: { queryKey: [string, string] }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_key, hackathon_id] = queryKey;
+  const res = await api.user.myteam[":hackathonId"].$get({
+    param: {
+      hackathonId: hackathon_id,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch hackathons");
   }
   const data = await res.json();
   return data;

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api, findPotentialTeammatesQueryOptions } from "@/lib/api";
 import { addUserToTeamQueryOptions } from "@/lib/api";
@@ -80,6 +80,7 @@ const Tags: React.FC<TagsProps> = ({ content, icon }) => {
 
 function PersonCard() {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const hackathon_id = Route.useParams().hackathonId;
   const findTeammateQuery = useQuery(
@@ -96,6 +97,7 @@ function PersonCard() {
     try {
       const data = await onButtonClick(hackathonId, personId);
       console.log(data);
+      navigate({ to: `/${hackathonId}/myteam` });
     } catch (error) {
       // Handle error if needed
       console.error(error);
