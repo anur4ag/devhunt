@@ -19,7 +19,7 @@ function Index() {
     );
   }
   return (
-    <div className="p-2">
+    <div className="p-2 min-h-screen bg-gray-100">
       <h3>Welcome {data.user.given_name}</h3>
     </div>
   );

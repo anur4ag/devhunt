@@ -42,8 +42,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function NavBar() {
   const { user } = Route.useRouteContext();
   return (
-    <div className="py-4 gap-2 font-nunito antialiased">
-      <MaxWidthWrapper className="flex justify-between items-center">
+      <MaxWidthWrapper className="flex justify-between items-center py-4 gap-2 font-nunito antialiased">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="" className="max-h-[50px] max-w-[50px]" />
           <p className="text-3xl font-extrabold tracking-tight pe-4">Devhunt</p>
@@ -92,7 +91,6 @@ function NavBar() {
           <Login />
         )}
       </MaxWidthWrapper>
-    </div>
   );
 }
 

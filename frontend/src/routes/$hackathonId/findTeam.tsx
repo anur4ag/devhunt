@@ -43,14 +43,14 @@ const listOfTags = [
 
 function FindTeam() {
   return (
-    <div className="p-12">
+    <div className="p-12 h-full">
       <div className="flex flex-col gap-2">
         <h1 className="text-lg font-bold">Looking for hackers?</h1>
         <p className="text-md text-muted-foreground">
           Browser from hackers below, invite them to join your team!
         </p>
       </div>
-      <div className="listOfTags flex gap-2 py-4">
+      <div className="listOfTags flex grow flex-wrap gap-2 py-4">
         {listOfTags.map((tag) => (
           <Tags key={tag.content} icon={tag.icon} content={tag.content} />
         ))}

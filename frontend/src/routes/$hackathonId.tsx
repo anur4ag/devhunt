@@ -36,51 +36,59 @@ function FindTeammate() {
     return <div>Error: {hackathonQuery.error.message}</div>;
   // console.log(hackathonId);~
   return (
-    <div className="min-h-screen w-screen flex">
-      <div className="w-[25%] shadow-lg">
-        <div className="p-12 flex flex-col flex-1 gap-12">
+    <div className=" w-screen flex flex-col md:flex-row">
+      <div className="w-full md:w-[25%] shadow-lg">
+        <div className="p-4 md:p-12 flex flex-row md:flex-col flex-1 gap-12">
           <div className="flex justify-center gap-4">
             {/* <img src={logo} alt="" className="h-[50px] w-[50px]" /> */}
-            <p className="text-xl font-bold">{hackathonQuery.data.name}</p>
+            <div className="hidden sm:inline">
+              <p className="text-xl font-bold">{hackathonQuery.data.name}</p>
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="w-full justify-center flex md:flex-col flex-wrap md:gap-4">
             <Link
               to="/$hackathonId/overview"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
+                "w-full flex justify-around md:p-8 [&.active]:bg-blue-500 [&.active]:text-white"
               )}
               onClick={() => {}}
             >
-              <Home size={24} />
+              <div className="hidden sm:inline">
+                <Home size={24} />
+              </div>
               Overview
             </Link>
             <Link
               to="/$hackathonId/findteam"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
+                "w-full flex justify-around md:p-8 [&.active]:bg-blue-500 [&.active]:text-white"
               )}
               onClick={() => {}}
             >
-              <Clipboard size={24} />
+              <div className="hidden sm:inline">
+                <Clipboard size={24} />
+              </div>
               Find Hackers
             </Link>
             <Link
               to="/$hackathonId/myteam"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "w-full flex justify-around p-8 [&.active]:bg-blue-500 [&.active]:text-white"
+                "w-full flex justify-around md:p-8 [&.active]:bg-blue-500 [&.active]:text-white"
               )}
               onClick={() => {}}
             >
-              <Handshake size={24} />
+              <div className="hidden sm:inline">
+                <Handshake size={24} />
+              </div>
               My Team
             </Link>
           </div>
         </div>
       </div>
-      <div className="w-[75%] bg-gray-100">
+      <div className="w-full pb-12 md:pb-4 md:w-[75%] bg-gray-100">
         <Outlet />
       </div>
     </div>
