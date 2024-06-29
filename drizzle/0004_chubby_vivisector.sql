@@ -1,0 +1,1 @@
+ALTER TABLE "hackathons" ALTER COLUMN "cover_img" SET DATA TYPE text;

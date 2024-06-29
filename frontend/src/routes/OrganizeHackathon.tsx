@@ -25,6 +25,7 @@ function CreateHackathon() {
       desc: "",
       tagline: "",
       cover_img: "",
+      logo: "",
       is_online: true,
       team_min: 1,
       team_max: 4,
@@ -133,6 +134,27 @@ function CreateHackathon() {
                   type="text"
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="image link"
+                  required
+                />
+                {field.state.meta.touchedErrors ? (
+                  <em>{field.state.meta.touchedErrors}</em>
+                ) : null}
+                {field.state.meta.isValidating ? "Validating..." : null}
+              </>
+            )}
+          />
+          <form.Field
+            name="logo"
+            children={(field) => (
+              <>
+                <Label htmlFor={field.name}>Logo URL:</Label>
+                <Input
+                  id={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  type="text"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="logo link"
                   required
                 />
                 {field.state.meta.touchedErrors ? (

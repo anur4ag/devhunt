@@ -49,9 +49,6 @@ export const Route = createFileRoute("/$hackathonId/overview")({
 function HackathonHome() {
   const { data, userRegistered } = Route.useLoaderData();
   const date = new Date(data.starts_at);
-  console.log(userRegistered);
-
-  console.log(data);
   return (
     <div className=" flex flex-col justify-center">
       <div className="relative mb-4 w-full" style={{ height: "200px" }}>
@@ -61,7 +58,7 @@ function HackathonHome() {
           className="absolute top-0 left-0 w-full h-full object-stretch"
         />
         <img
-          src={"https://github.com/shadcn.png"}
+          src={data.logo}
           alt=""
           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-20 h-20 rounded-full"
         />

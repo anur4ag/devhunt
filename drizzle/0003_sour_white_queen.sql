@@ -1,0 +1,1 @@
+ALTER TABLE "hackathons" ADD COLUMN "logo" text NOT NULL;

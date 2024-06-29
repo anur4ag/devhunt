@@ -65,13 +65,8 @@ const RenderCards = () => {
                 <LinkIcon />
               </div>
             </CardTitle>
-            <CardDescription className="tracking-tight text-md ">
-              {hackathon.tagline}
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <p>hackathon</p>
-          </CardContent>
+          <CardContent>{hackathon.tagline}</CardContent>
           <CardFooter className="w-full">
             <div className="flex flex-col sm:flex-row md:flex-row md:w-full sm:justify-between">
               <div className="tags flex gap-3  flex-wrap">

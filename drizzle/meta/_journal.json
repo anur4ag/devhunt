@@ -22,6 +22,20 @@
       "when": 1717146143046,
       "tag": "0002_illegal_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1719691643369,
+      "tag": "0003_sour_white_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1719692310881,
+      "tag": "0004_chubby_vivisector",
+      "breakpoints": true
     }
   ]
 }
