@@ -40,7 +40,7 @@ function CreateHackathon() {
     },
   });
   return (
-    <div className="flex flex-col max-w-lg mx-auto my-5">
+    <div className="flex flex-col max-w-lg mx-auto my-5 p-4">
       <Card>
         <CardHeader>
           <CardTitle>Want to organize your own hackathon?</CardTitle>

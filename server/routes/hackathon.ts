@@ -58,6 +58,7 @@ export const hackathonRoute = new Hono()
         return c.json({ message: "Invalid request body" }, 400);
       }
     }),
+    getUser,
     async (c) => {
       let hackathon = c.req.valid("json");
       const uniqueid: string = crypto.randomUUID();
@@ -192,40 +193,5 @@ export const hackathonRoute = new Hono()
           )
         );
       return c.json({ potential_teammates });
-    }
-  )
-  .post(
-    "/team",
-    getUser,
-    zValidator(
-      "json",
-      z.object({
-        hackathon_id: z.string().uuid(),
-      }),
-      (result, c) => {
-        console.log(result);
-        if (!result.success) {
-          return c.json({ message: "Invalid hackathon id" }, 400);
-        }
-      }
-    ),
-    async (c) => {
-      const user = c.var.user;
-      const hackathon_id = c.req.valid("json").hackathon_id;
-      const potential_team = await db
-        .select({
-          id: teamsTable.id,
-          team_name: teamsTable.name,
-        })
-        .from(user_hackathon_table)
-        .innerJoin(teamsTable, eq(user_hackathon_table.team_id, teamsTable.id))
-        .where(
-          and(
-            eq(user_hackathon_table.hackathon_id, hackathon_id),
-            isNull(user_hackathon_table.team_id),
-            ne(user_hackathon_table.user_id, user.id)
-          )
-        );
-      return c.json({ potential_team });
     }
   );
