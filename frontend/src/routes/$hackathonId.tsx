@@ -36,7 +36,7 @@ function FindTeammate() {
     return <div>Error: {hackathonQuery.error.message}</div>;
   // console.log(hackathonId);~
   return (
-    <div className=" w-screen flex flex-col md:flex-row">
+    <div className=" w-screen md:h-screen flex flex-col md:flex-row">
       <div className="w-full md:w-[25%] shadow-lg">
         <div className="p-4 md:p-12 flex flex-row md:flex-col flex-1 gap-12">
           <div className="flex justify-center gap-4">
