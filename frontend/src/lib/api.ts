@@ -78,6 +78,7 @@ async function fetchIndividualHackathon({
     },
   });
   if (!res.ok) {
+    toast.error("Please login first!");
     throw new Error("Failed to fetch hackathons");
   }
   const data = await res.json();
@@ -115,6 +116,7 @@ async function getCurrentUser() {
 async function fetchUserRegisteredHackathon() {
   const res = await api.user.userhackathons.$get();
   if (!res.ok) {
+    toast.error("Please login first!");
     throw new Error("server error");
   }
   const data = await res.json();

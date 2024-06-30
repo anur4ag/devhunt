@@ -121,8 +121,8 @@ function Root() {
       <NavBar />
       <hr />
       <NewNav />
-      <Outlet />
       <Toaster richColors />
+      <Outlet />
       {/* <TanStackRouterDevtools /> */}
     </>
   );

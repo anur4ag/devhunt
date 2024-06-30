@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-router";
 import { Clipboard, Home, Handshake } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/$hackathonId")({
@@ -22,7 +21,7 @@ export const Route = createFileRoute("/$hackathonId")({
       return data;
     } catch (e) {
       console.error(e);
-      toast.error("Hackathon not found");
+      toast.error("Please login first!");
       return redirect({ to: "/hackathons" });
     }
   },
@@ -30,13 +29,7 @@ export const Route = createFileRoute("/$hackathonId")({
 });
 
 function FindTeammate() {
-  const { hackathonId } = Route.useParams();
-  const hackathonQuery = useQuery(individualHackathonQueryOptions(hackathonId));
-
-  if (hackathonQuery.isPending) return <div>Loading...</div>;
-  if (hackathonQuery.error)
-    return <div>Error: {hackathonQuery.error.message}</div>;
-  // console.log(hackathonId);~
+  const data = Route.useRouteContext();
   return (
     <div className=" w-screen md:h-screen flex flex-col md:flex-row">
       <div className="w-full md:w-[25%] shadow-lg">
@@ -44,7 +37,7 @@ function FindTeammate() {
           <div className="flex justify-center gap-4">
             {/* <img src={logo} alt="" className="h-[50px] w-[50px]" /> */}
             <div className="hidden sm:inline">
-              <p className="text-xl font-bold">{hackathonQuery.data.name}</p>
+              <p className="text-xl font-bold">{data.name}</p>
             </div>
           </div>
           <div className="w-full justify-center flex md:flex-col flex-wrap md:gap-4">
@@ -91,7 +84,7 @@ function FindTeammate() {
         </div>
       </div>
       <div className="w-full pb-12 md:pb-4 md:w-[75%] bg-gray-100">
-        <Outlet />
+        <Outlet data={data} />
       </div>
     </div>
   );

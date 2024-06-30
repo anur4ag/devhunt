@@ -21,6 +21,7 @@ import {
   isUserRegisteredHackathon,
 } from "@/lib/api";
 import { toast } from "sonner";
+import { useOutlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$hackathonId/overview")({
   loader: async ({ context, params }) => {
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/$hackathonId/overview")({
 });
 
 function HackathonHome() {
+
   const { data, userRegistered } = Route.useLoaderData();
   const date = new Date(data.starts_at);
   return (
