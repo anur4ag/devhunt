@@ -10,6 +10,7 @@ import {
 import { Clipboard, Home, Handshake } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$hackathonId")({
   beforeLoad: async ({ context, params }) => {
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/$hackathonId")({
       return data;
     } catch (e) {
       console.error(e);
+      toast.error("Hackathon not found");
       return redirect({ to: "/hackathons" });
     }
   },

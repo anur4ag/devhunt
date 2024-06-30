@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/OrganizeHackathon")({
   component: CreateHackathon,
@@ -35,8 +36,10 @@ function CreateHackathon() {
       console.log(value);
       const res = await api.hackathons.$post({ json: value });
       if (!res.ok) {
+        toast.error("Failed to create hackathon");
         throw new Error("Failed to create hackathon");
       }
+      toast.success("Hackathon created successfully");
       navigate({ to: "/hackathons" });
     },
   });

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { hackathons as hackathonTable } from "../db/schema/hackathons";
 import { db } from "../db";
-import { and, eq, isNull, ne } from "drizzle-orm";
+import { and, eq, isNull, ne, sql, not, exists } from "drizzle-orm";
 import { getUser } from "../kinde";
 import { user_hackathons as user_hackathon_table } from "../db/schema/user_hackathon";
 import { teams, teams as teamsTable } from "../db/schema/teams";
@@ -195,4 +195,5 @@ export const hackathonRoute = new Hono()
         );
       return c.json({ potential_teammates });
     }
-  );
+  )
+  

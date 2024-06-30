@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import { getUser } from "../kinde";
 import { db } from "../db";
 import { users as usersTable } from "../db/schema/users";
-import { and, eq, inArray, ne } from "drizzle-orm";
+import { and, eq, inArray, ne, sql, not, exists } from "drizzle-orm";
 import { user_hackathons as userHackathonTable } from "../db/schema/user_hackathon";
-import { hackathons as hackathonsTable } from "../db/schema/hackathons";
+import { hackathons as hackathonTable } from "../db/schema/hackathons";
 import { teams as teamsTable } from "../db/schema/teams";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
@@ -99,14 +99,17 @@ export const userHackathonRoute = new Hono()
           )
         );
       if (userHackathon.length === 0) {
-        return c.json({
-          message: "User not registered for this hackathon",
-          case: 1,
-        });
+        return c.json(
+          {
+            message: "User not registered for this hackathon",
+            case: 1,
+          },
+          200
+        );
       }
       const teamId = userHackathon[0].team_id;
       if (teamId === null) {
-        return c.json({ message: "User not in any team", case: 2 });
+        return c.json({ message: "User not in any team", case: 2 }, 200);
       }
       const teamMembers = await db
         .select()
@@ -124,15 +127,91 @@ export const userHackathonRoute = new Hono()
         .from(teamsTable)
         .where(eq(teamsTable.id, teamId));
 
-      const teamMembersDetails = await db
-        .select()
-        .from(usersTable)
-        .where(inArray(usersTable.id, teamMembersId));
-      return c.json({
-        createdBy: { name: teamDetails[0].createdBy },
-        teamName: teamDetails[0].teamName,
-        teamMembers: teamMembersDetails,
-        case: 3,
-      });
+      if (teamMembersId.length > 0) {
+        const teamMembersDetails = await db
+          .select()
+          .from(usersTable)
+          .where(inArray(usersTable.id, teamMembersId));
+        // Proceed with using teamMembersDetails as before
+        return c.json(
+          {
+            createdBy: { name: teamDetails[0].createdBy },
+            teamName: teamDetails[0].teamName,
+            teamMembers: teamMembersDetails,
+            case: 3,
+          },
+          200
+        );
+      } else {
+        return c.json(
+          {
+            createdBy: { name: teamDetails[0].createdBy },
+            teamName: teamDetails[0].teamName,
+            teamMembers: [],
+            case: 3,
+          },
+          200
+        );
+      }
     }
-  );
+  )
+  .get("/availaible-team", async (c) => {
+    // const user = c.var.user;
+    const result = await db
+      .select({
+        teamId: teamsTable.id,
+        teamName: teamsTable.name,
+        teamCreator: usersTable.name,
+        teamCreatedAt: teamsTable.created_at,
+      })
+      .from(teamsTable)
+      .innerJoin(
+        hackathonTable,
+        eq(teamsTable.hackathon_id, hackathonTable.uuid)
+      )
+      .leftJoin(
+        userHackathonTable,
+        eq(teamsTable.id, userHackathonTable.team_id)
+      )
+      .innerJoin(usersTable, eq(teamsTable.created_by, usersTable.id))
+      .where(
+        and(
+          eq(
+            hackathonTable.uuid,
+            db
+              .select({ uuid: hackathonTable.uuid })
+              .from(hackathonTable)
+              .where(
+                eq(hackathonTable.uuid, "202a8d4f-7ea5-4836-8d6a-e494a988746f")
+              )
+              .limit(1)
+          ),
+          not(
+            exists(
+              db
+                .select()
+                .from(userHackathonTable)
+                .where(
+                  and(
+                    eq(
+                      userHackathonTable.user_id,
+                      "kp_d3d23041f3544aef9f51a4f6378302c6"
+                    ),
+                    eq(userHackathonTable.hackathon_id, hackathonTable.uuid)
+                    // sql`${userHackathonTable.team_id} IS NOT NULL`
+                  )
+                )
+            )
+          )
+        )
+      )
+      .groupBy(
+        teamsTable.id,
+        teamsTable.name,
+        hackathonTable.team_max,
+        usersTable.id,
+        teamsTable.created_at
+      );
+
+    return c.json({ result });
+  });

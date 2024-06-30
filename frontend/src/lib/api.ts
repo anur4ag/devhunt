@@ -1,6 +1,7 @@
 import { hc } from "hono/client";
 import { type ApiRoutes } from "@server/app";
 import { queryOptions } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const client = hc<ApiRoutes>("/");
 export const api = client.api;
@@ -152,5 +153,10 @@ async function fetchTeamDetails({ queryKey }: { queryKey: [string, string] }) {
     throw new Error("Failed to fetch hackathons");
   }
   const data = await res.json();
+  if (data.case === 1) {
+    toast.error("Please register for this hackathon first");
+  } else if (data.case === 2) {
+    toast.error("Please join a team first");
+  }
   return data;
 }

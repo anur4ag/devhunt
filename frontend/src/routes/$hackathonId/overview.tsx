@@ -38,8 +38,8 @@ export const Route = createFileRoute("/$hackathonId/overview")({
       }
       return { data, userRegistered };
     } catch (e) {
+      toast.error("Please login first!");
       console.error(e);
-      toast.error("Please login first");
       return redirect({ to: "/hackathons" });
     }
   },
@@ -113,8 +113,10 @@ const RegisterDialog: React.FC<HackathonProps> = ({
       console.log(value);
       const res = await api.hackathons.newteam.$post({ json: value });
       if (!res.ok) {
-        throw new Error("Failed to create hackathon");
+        toast.error("Failed to create team");
+        throw new Error("Failed to create team");
       }
+      toast.success("Team created successfully-Add teammates!");
       navigate({ to: `/${hackathon.uuid}/findteam` });
     },
   });
@@ -127,8 +129,10 @@ const RegisterDialog: React.FC<HackathonProps> = ({
       console.log(value);
       const res = await api.hackathons.register.$post({ json: value });
       if (!res.ok) {
-        throw new Error("Failed to create hackathon");
+        toast.error("Failed to register-Please try again!");
+        throw new Error("Failed to register");
       }
+      toast.success("Registered successfully-Search for team!");
       navigate({
         to: `/${hackathon.uuid}/findteam`,
       });

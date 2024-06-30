@@ -21,6 +21,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$hackathonId/findTeam")({
   component: FindTeam,
@@ -95,6 +96,7 @@ function PersonCard() {
     setIsLoading(true);
     try {
       const data = await onButtonClick(hackathonId, personId);
+      toast.success("Added successfully to team!");
       console.log(data);
       navigate({ to: `/${hackathonId}/myteam` });
     } catch (error) {
@@ -222,6 +224,7 @@ async function onButtonClick(hackathon_id: string, user_id: string) {
     },
   });
   if (!res.ok) {
+    toast.error("Failed to add to team");
     throw new Error("server error");
   }
   const data = await res.json();

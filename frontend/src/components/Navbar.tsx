@@ -1,17 +1,10 @@
-import {
-  createRootRouteWithContext,
-  Link,
-  Outlet,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { type QueryClient } from "@tanstack/react-query";
-import { userQueryOptions } from "@/lib/api";
-import React, { useState } from "react";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import React from "react";
+import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Link } from "@tanstack/react-router";
 import logo from "@public/logo.svg";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { NotebookPen, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,28 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import NewNav from "@/components/NewNav";
-import { Toaster } from "sonner";
-interface MyRouterContext {
-  queryClient: QueryClient;
-}
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-  beforeLoad: async ({ context }) => {
-    const queryClient = context.queryClient;
-    try {
-      const data = await queryClient.fetchQuery(userQueryOptions);
-      return data;
-    } catch (e) {
-      console.error(e);
-      return { user: null };
-    }
-  },
-  component: Root,
-});
+import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { userQueryOptions } from "@/lib/api";
 
 function NavBar() {
-  const { user } = Route.useRouteContext();
+  const { data, isPending, error } = useQuery(userQueryOptions);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  if (isPending) return <NavWithouthUser />;
+  if (error) return;
+  const { user } = data;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -115,18 +96,23 @@ function NavBar() {
   );
 }
 
-function Root() {
+const NavWithouthUser = () => {
   return (
-    <>
-      <NavBar />
-      <hr />
-      <NewNav />
-      <Outlet />
-      <Toaster richColors />
-      {/* <TanStackRouterDevtools /> */}
-    </>
+    <MaxWidthWrapper className="font-nunito antialiased">
+      <nav className="flex flex-wrap items-center justify-between py-4">
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src={logo}
+            alt="Devhunt Logo"
+            className="max-h-[50px] max-w-[50px]"
+          />
+          <p className="text-3xl font-extrabold tracking-tight">Devhunt</p>
+        </Link>
+        <Login />
+      </nav>
+    </MaxWidthWrapper>
   );
-}
+};
 
 const Login = () => {
   return (
@@ -135,3 +121,5 @@ const Login = () => {
     </Button>
   );
 };
+
+export default NavBar;

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { getTeamQueryOptions } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Medal, Bookmark } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$hackathonId/myTeam")({
   component: GetTeamDetails,
@@ -29,7 +30,6 @@ function GetTeamDetails() {
   } else if (data.case === 2) {
     return <div>User not in any team</div>;
   } else {
-    console.log(data);
     return (
       <div className="p-12">
         <div className="flex flex-col gap-2">
@@ -40,12 +40,17 @@ function GetTeamDetails() {
         </div>
         <div className=" flex flex-col mt-8 gap-2">
           <p className="text-lg">
-            Team Name : <span className="font-bold uppercase">{data.teamName}</span>
+            Team Name :{" "}
+            <span className="font-bold uppercase">{data.teamName}</span>
           </p>
           <p className="text-lg">Team Members: You +</p>
         </div>
         <div className="pt-4 flex flex-col gap-4">
-          <PersonCard data={data.teamMembers} />
+          {data.teamMembers.length > 0 ? (
+            <PersonCard data={data.teamMembers} />
+          ) : (
+            <div>No team members, <Link className="text-blue-700 font-semibold underline" to={`/${hackathon_id}/findteam`}>Add Teammates</Link></div>
+          )}
         </div>
       </div>
     );
