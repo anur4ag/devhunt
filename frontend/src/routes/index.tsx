@@ -1,5 +1,4 @@
-import { userQueryOptions } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
+
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import banner from "@public/banner.png";
@@ -11,11 +10,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { isPending, data, error } = useQuery(userQueryOptions);
-
-  if (error) {
-    toast.error("Failed to fetch user data");
-  }
 
   return (
     <>
