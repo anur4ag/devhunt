@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { hackathonQueryOptions } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Link as LinkIcon } from "lucide-react";
+import { Link as LinkIcon, Lock } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -41,7 +41,7 @@ export default Hackathons;
 const Tags: React.FC<TagsProps> = ({ content }) => {
   return (
     <div className="flex gap-2">
-      <Badge variant="outline" className="px-4 bg-[#f5f7f7] rounded-xl py-4">
+      <Badge variant="outline" className="px-4 bg-[#f5f7f7] rounded-xl py-2">
         <p className="uppercase text-md tracking-wide">{content}</p>
       </Badge>
     </div>
@@ -49,6 +49,7 @@ const Tags: React.FC<TagsProps> = ({ content }) => {
 };
 
 const RenderCards = () => {
+  const { user } = Route.useRouteContext();
   const { isPending, error, data } = useQuery(hackathonQueryOptions);
   if (isPending) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -75,11 +76,20 @@ const RenderCards = () => {
                 <Tags content="Social" />
               </div>
               <div className="applyButton w-full sm:w-auto md:w-auto mt-4 sm:mt-0">
-                <a href={`/${hackathon.uuid}/overview`}>
-                  <Button className="px-8 py-6 w-full sm:w-auto md:w-auto text-lg rounded-lg">
-                    Apply now
-                  </Button>
-                </a>
+                {user ? (
+                  <a href={`/${hackathon.uuid}/overview`}>
+                    <Button className="px-8 py-6 w-full sm:w-auto md:w-auto text-lg rounded-lg">
+                      Apply now
+                    </Button>
+                  </a>
+                ) : (
+                  <a href={`/api/login`}>
+                    <Button className="px-4 flex gap-2 py-6 w-full sm:w-auto md:w-auto text-lg rounded-md" >
+                      <Lock size={20}/>
+                      Login to apply
+                    </Button>
+                  </a>
+                )}
               </div>
             </div>
           </CardFooter>
