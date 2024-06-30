@@ -83,8 +83,9 @@ function Index() {
         </div>
       </MaxWidthWrapper>
 
-      <footer className="bg-gray-800 text-white text-center p-6">
+      <footer className="bg-gray-800 text-white flex flex-col text-center p-6">
         © {new Date().getFullYear()} Devhunt. All rights reserved.
+        <a className="font-bold text-blue-500 hover:underline" href="https://github.com/anur4ag/devhunt" target="blank">Open source @ Github</a>
       </footer>
     </>
   );
