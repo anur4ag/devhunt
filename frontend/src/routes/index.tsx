@@ -1,6 +1,5 @@
 
 import { createFileRoute } from "@tanstack/react-router";
-import { toast } from "sonner";
 import banner from "@public/banner.png";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { GlareCard } from "@/components/ui/glare-card";
